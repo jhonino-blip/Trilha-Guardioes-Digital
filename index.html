@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Trilha Guardiões Digitais - Fase por Fase</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f0f4f8; color: #333; padding: 20px; margin:0; }
+h1 { text-align: center; color: #0055a5; margin-bottom: 20px; }
+h2 { margin-bottom: 10px; }
+.quiz { display: none; margin-bottom: 30px; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: all 0.5s ease; opacity:0; transform: translateX(50px); }
+.quiz.active { display:block; opacity:1; transform: translateX(0); }
+button { margin-top: 10px; padding: 10px 15px; border: none; border-radius: 5px; background: #0055a5; color: #fff; cursor: pointer; font-size: 14px; }
+button:hover { background: #003f7f; }
+.correct { color: green; font-weight: bold; }
+.wrong { color: red; font-weight: bold; }
+.drag-item { padding: 8px 12px; margin: 5px; background: #cce5ff; border-radius: 5px; cursor: grab; display: inline-block; }
+.drop-zone { border: 2px dashed #0055a5; padding: 12px; min-width: 140px; margin: 5px; border-radius: 5px; display: inline-block; vertical-align: top; }
+#score-board { text-align: center; display: none; padding: 25px; background: #fff3cd; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+#progress-bar { width: 100%; background: #ddd; border-radius: 10px; overflow: hidden; margin-bottom: 20px; height: 20px; }
+#progress { width: 0%; height: 100%; background: #0055a5; transition: width 0.5s ease; }
+.icon { font-size: 24px; margin-right: 8px; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<h1>🎮 Trilha Guardiões Digitais</h1>
+<div id="progress-bar"><div id="progress"></div></div>
+
+<!-- Aqui você insere todas as fases completas -->
+<!-- Exemplo: Q1 -->
+<div class="quiz multiple-choice" id="q1">
+  <h2><span class="icon">🔒</span>1️⃣ Segurança Digital</h2>
+  <p>Qual é a senha mais segura?</p>
+  <input type="radio" name="q1" value="a">123456<br>
+  <input type="radio" name="q1" value="b">MeuNome2025<br>
+  <input type="radio" name="q1" value="c">X@7!gL9#<br>
+  <button onclick="checkAnswer('q1','c')">Responder</button>
+  <p id="result-q1"></p>
+</div>
+
+<!-- Continue para q2 até q9 -->
+
+<div id="score-board">
+  <h2>🏆 Parabéns!</h2>
+  <p id="score-message"></p>
+</div>
+
+<script>
+// Script de controle das fases, drag & drop e score
+let current = 1;
+let total = 9;
+let score = 0;
+
+function showCurrent() {
+  for(let i=1;i<=total;i++){
+    let q = document.getElementById('q'+i);
+    q.classList.toggle('active', i===current);
+  }
+  document.getElementById('progress').style.width = ((current-1)/total*100)+'%';
+}
+showCurrent();
+
+function checkAnswer(qid, correct){
+  let result = document.getElementById('result-'+qid);
+  let radios = document.getElementsByName(qid);
+  let selected = '';
+  if(radios.length>0){ for(let r of radios){ if(r.checked){ selected = r.value; } } }
+  else { selected = correct; }
+  if(selected === correct){
+    result.innerHTML='✅ Correto!';
+    result.className='correct';
+    score++; current++;
+    if(current>total){ showScore(); return; }
+    setTimeout(showCurrent,500);
+  } else { result.innerHTML='❌ Tente novamente!'; result.className='wrong'; }
+}
+
+function showScore(){
+  document.getElementById('score-board').style.display='block';
+  document.getElementById('score-message').innerText=`Você completou todas as fases e acertou ${score} de ${total}! 🎉`;
+  document.getElementById('progress').style.width='100%';
+}
+</script>
+
+</body>
+</html>
